@@ -30,7 +30,7 @@
           "value": "endofthelineslots.com"
         }
       ],
-      "destination": "https://www.endofthelineslots.com/:1",
+      "destination": "https://www.endofthelineslots.com/$1",
       "permanent": true
     }
   ]
