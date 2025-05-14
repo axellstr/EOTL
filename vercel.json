@@ -20,5 +20,18 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "endofthelineslots.com"
+        }
+      ],
+      "destination": "https://www.endofthelineslots.com/:1",
+      "permanent": true
+    }
   ]
-} 
+}
