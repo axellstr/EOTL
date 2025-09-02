@@ -5,15 +5,463 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>End of the Line - Casino Offers and Bonuses</title>
     <link rel="icon" type="image/png" href="seven.png">
-    <link rel="stylesheet" href="v2.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-
-     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <style>
+        :root {
+            /* Color System */
+            --color-dark: #0a0a0a;
+            --color-primary: #b71c1c;
+            --color-primary-light: #d32f2f;
+            --color-primary-dark: #7f0000;
+            --color-text: #ffffff;
+            --color-text-muted: #cccccc;
+            --color-accent: #ff4b4b;
+            --button-gradient: linear-gradient(325deg, rgb(172, 5, 19) 0%, rgb(255, 23, 73) 55%, rgb(172, 5, 19) 90%);
+            --ribbon-gradient: linear-gradient(90deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+            
+            /* Font families */
+            --font-body: 'Montserrat', sans-serif;
+            
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            font-family: var(--font-body);
+            background-color: var(--color-dark);
+            color: var(--color-text);
+            background-image: url(bgt.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Remix Icon styling */
+        [class^="ri-"], [class*=" ri-"] {
+            font-size: 1.2rem;
+            vertical-align: middle;
+            color: var(--color-text);
+            background-color: rgb(22, 22, 22);
+            padding: 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a [class^="ri-"], 
+        nav ul li a [class*=" ri-"] {
+            transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        nav ul li a:hover [class^="ri-"], 
+        nav ul li a:hover [class*=" ri-"] {
+            transform: translateY(-3px);
+            background-color: rgb(35, 35, 35);
+            color: var(--color-primary-light);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        img, picture, video, canvas, svg {
+            display: block;
+            max-width: 100%;
+        }
+
+        input, button, textarea, select {
+            font: inherit;
+        }
+
+        p, h1, h2, h3, h4, h5, h6 {
+            overflow-wrap: break-word;
+        }
+
+        header {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+            margin: 20px 0;
+            min-width: 300px;
+            border-radius: 8px;
+        }
+
+        .logo-container{
+            margin-right: 120px;
+        }
+
+        .logo-container img {
+            width: 180px;
+            height: auto;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            align-items: start;
+            gap: 20px;
+            font-size: 1.2rem;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+        }
+
+        /* Main content area - this will grow to fill available space */
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: var(--spacing-md);
+            position: relative;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            width: 100%;
+            max-width: 800px;
+            backdrop-filter: blur(2px);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .ranking-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 0.25rem 0.6rem;
+            background-image: var(--ribbon-gradient);
+            color: var(--color-text);
+            font-weight: 600;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+            font-size: 0.9rem;
+            min-width: 50px;
+            justify-content: center;
+        }
+
+        .rank-number {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .card-logo {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 180px;
+            min-width: 180px;
+        }
+
+        .card-logo img{
+            max-width: 180px;
+            width: 100%;
+            height: auto;
+        }
+
+        .card-body{
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            padding: var(--spacing-xs);
+            gap: var(--spacing-xs);
+        }
+
+        .bonus-item{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: var(--spacing-xs);
+            text-align: start;
+            min-width: 100px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.103);
+        }
+
+        .bonus-value{
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .bonus-label{
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+        }
+
+        .card-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .claim-bonus {
+            cursor: pointer;
+            padding: 0 10px;
+            width: 150px;
+            height: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: 0.5s;
+            background-image: var(--button-gradient);
+            background-size: 300% auto;
+            border: none;
+            border-radius: 8px;
+            color: var(--color-text);
+            box-shadow: 0px 4px 15px rgba(255, 0, 98, 0.3);
+            margin-left: 20px;
+            white-space: nowrap;
+            align-self: center;
+        }
+
+        .claim-bonus:hover {
+            background-position: right center;
+            transform: translateY(1px);
+        }
+
+        .claim-bonus:active {
+            transform: translateY(3px);
+        }
+
+        /* Footer stays at bottom */
+        .site-footer {
+            padding: 2rem 0 1rem 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 var(--spacing-sm);
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .partner-section {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-xs) / 2);
+        }
+
+        .partner-label {
+            color: var(--color-text);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .partner-link {
+            color: orange!important;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin: calc(var(--spacing-xs) / 2) 0;
+        }
+
+        .gamble-aware-logo {
+            max-width: 180px;
+            height: auto;
+        }
+
+        .footer-disclaimers {
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .disclaimer-text {
+            font-size: 0.7rem;
+            color: var(--color-text-muted);
+            margin-bottom: 0.25rem;
+            line-height: 1.3;
+        }
+
+        .external-link-icon {
+            font-size: 0.85rem !important;
+            background-color: transparent !important;
+            padding: 0 !important;
+            border-radius: 0;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .partner-link:hover .external-link-icon {
+            transform: rotate(45deg);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+            }
+            
+            .logo-container {
+                margin: 0;
+                margin-bottom: 40px;
+            }
+
+            .card {
+                flex-direction: column;
+                margin: 20px 0;
+            }
+            
+            .card-logo {
+                margin-bottom: var(--spacing-sm);
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                margin-top: 2rem;
+            }
+            
+            .ranking-indicator {
+                padding: 0.2rem 0.5rem;
+                width: auto;
+                left: 50%;
+                transform: translateX(-50%);
+                border-radius: 0 0 8px 8px;
+                top: 0;
+                clip-path: none;
+                min-width: 80px;
+            }
+
+            .container {
+                width: 90%;
+            }
+            
+            .footer-container {
+                gap: var(--spacing-xs);
+            }
+            
+            .partner-label {
+                font-size: 0.8rem;
+            }
+            
+            .partner-link {
+                font-size: 0.9rem;
+            }
+            
+            .gamble-aware-logo {
+                max-width: 140px;
+            }
+            
+            .disclaimer-text {
+                font-size: 0.65rem;
+            }
+        }
+
+        @media (max-width: 1130px) {
+            .card-body {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .container {
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-body {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-xs);
+            }
+
+            .claim-bonus {
+                width: 100%;
+                max-width: 280px;
+                margin-left: 0;
+                margin-top: var(--spacing-sm);
+                justify-self: center;
+            }
+
+            nav ul {
+                font-size: 1rem;
+                gap: 15px;
+            }
+
+            .logo-container img {
+                width: 150px;
+            }
+
+            .bonus-value {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
 </head>
 <body>
 <header>
@@ -22,11 +470,11 @@
             <img src="Line.svg" alt="Logo" class="logo">
         </div>
         <ul class="nav-list" id="navList">
-    <li><a href="https://discord.com/invite/WWubucMH2s" target="_blank"><i class="ri-discord-fill"></i></a></li>
-    <li><a href="https://www.instagram.com/endofthelinetwitch/" target="_blank"><i class="ri-instagram-line"></i> </a></li>
-    <li><a href="https://www.twitch.tv/endofthelinetwitch"><i class="ri-twitch-fill"></i> </a></li>
-    <li><a href="mailto:power009_19@windowslive.com"><i class="ri-mail-send-line"></i> </a></li>
-    </ul>
+            <li><a href="https://discord.com/invite/WWubucMH2s" target="_blank"><i class="ri-discord-fill"></i></a></li>
+            <li><a href="https://www.instagram.com/endofthelinetwitch/" target="_blank"><i class="ri-instagram-line"></i></a></li>
+            <li><a href="https://www.twitch.tv/endofthelinetwitch"><i class="ri-twitch-fill"></i></a></li>
+            <li><a href="mailto:power009_19@windowslive.com"><i class="ri-mail-send-line"></i></a></li>
+        </ul>
     </nav>
 </header>
 
@@ -42,37 +490,36 @@
             </div>
             <div class="card-body">
                 <div class="bonus-item">
-                        <span class="bonus-value">100%</span>
-                        <span class="bonus-label">Bonus</span>
-                    </div>
-                    <div class="bonus-item">
-                        <span class="bonus-value">300€</span>
-                        <span class="bonus-label">Max bonus</span>
-                    </div>
-                    <div class="bonus-item">
-                        <span class="bonus-value">No</span>
-                        <span class="bonus-label">Free spins</span>
-                    </div>
-                    <div class="bonus-item">
-                        <span class="bonus-value">No</span>
-                        <span class="bonus-label">Wager</span>
-                    </div>
-                    <div class="bonus-item">
-                        <span class="bonus-value">25€</span>
-                        <span class="bonus-label">Min.Deposit</span>
-                    </div>
-                    <div class="bonus-item">
-                        <span class="bonus-value">STARS1</span>
-                        <span class="bonus-label">Promo Code</span>
-                    </div>
+                    <span class="bonus-value">100%</span>
+                    <span class="bonus-label">Bonus</span>
+                </div>
+                <div class="bonus-item">
+                    <span class="bonus-value">300€</span>
+                    <span class="bonus-label">Max bonus</span>
+                </div>
+                <div class="bonus-item">
+                    <span class="bonus-value">No</span>
+                    <span class="bonus-label">Free spins</span>
+                </div>
+                <div class="bonus-item">
+                    <span class="bonus-value">No</span>
+                    <span class="bonus-label">Wager</span>
+                </div>
+                <div class="bonus-item">
+                    <span class="bonus-value">25€</span>
+                    <span class="bonus-label">Min.Deposit</span>
+                </div>
+                <div class="bonus-item">
+                    <span class="bonus-value">STARS1</span>
+                    <span class="bonus-label">Promo Code</span>
+                </div>
             </div>
             <div class="card-button">
-              <a href="https://record.mematoaffiliates.com/_AuUR-K3jo5KYnVqGHN08XWNd7ZgqdRLk/1/?pg=1" target="_blank">
+                <a href="https://record.mematoaffiliates.com/_AuUR-K3jo5KYnVqGHN08XWNd7ZgqdRLk/1/?pg=1" target="_blank">
                     <button class="claim-bonus">CLAIM BONUS</button>
                 </a>
             </div>
         </div>
-    
     </div>
 </main>
 
@@ -92,8 +539,5 @@
         </div>
     </div>
 </footer>
-
-<script src="script.js"></script>
 </body>
 </html>
-
